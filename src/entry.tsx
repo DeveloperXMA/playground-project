@@ -1,12 +1,13 @@
 // src/index.tsx
 import { createRoot } from 'react-dom/client';
-import ChatBot, { ChatBotProps } from './ChatBot';
+import ChatBot from './ChatBot';
 
-const loadChatBot = (selector: string, initData: ChatBotProps) => {
+
+const loadChatBot = (selector: string, initData: { [key: string]: string }) => {
   const container = document.querySelector(selector);
   if (container) {
     const root = createRoot(container); // Create a root.
-    root.render(<ChatBot initData={initData} />); // Use the root to render.
+    root.render(<ChatBot {...initData} />); // Use the root to render using spread operator to pass props.
   } else {
     console.error(`The selector "${selector}" did not match any element.`);
   }

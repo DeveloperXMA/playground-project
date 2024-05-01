@@ -1,59 +1,98 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// ChatBot.tsx
 import './chatbot.scss';
-import { useEffect, useState } from 'react';
-
-export interface ChatBotProps {
-  initData: any;
+import { useEffect, useState, ChangeEvent, KeyboardEvent } from 'react';
+export interface Message {
+  text: string;
+  sender: 'user' | 'bot';
 }
 
-const ChatBot = ({ initData }: ChatBotProps) => {
+const ChatBot = ( initData : { [key: string]: string }) => {
   const [expanded, setExpanded] = useState(false);
-  const [text, setText] = useState<any>();
+  const [text, setText] = useState<string>('');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
 
-  // Add this inside your ChatBot component
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInput(event.target.value);
+  };
+
+  const handleSendMessage = () => {
+    if (input.trim() !== '') {
+      const userMessage: Message = { text: input, sender: 'user' };
+      const botMessage: Message = { text: '为什么不问问神奇海螺呢', sender: 'bot' }; // Simulating a bot response
+
+      setMessages([...messages, userMessage, botMessage]);
+      setInput('');
+    }
+  };
+
   useEffect(() => {
-    // This function handles incoming messages
-    const receiveMessage = (event: any) => {
+    if (text) {
+      const userMessage: Message = { text: `I have a question about ${text}`, sender: 'user' };
+      const botMessage: Message = { text: '为什么不问问神奇海螺呢', sender: 'bot' }; // Simulating a bot response
 
-      // Handle different types of messages
+      setMessages(prevMessages => [...prevMessages, userMessage, botMessage]);
+    }
+  }, [text]);
+
+  useEffect(() => {
+    const receiveMessage = (event: MessageEvent) => {
       if (event.data.type === 'ADD_TEXT') {
-        // Perform action based on event.data
-        setText(event.data.payload)
+        setText(event.data.payload);
       }
     };
 
-    // Set up the event listener for messages
     window.addEventListener('message', receiveMessage);
-
-    // Clean up the listener when the component unmounts
-    return () => {
-      window.removeEventListener('message', receiveMessage);
-    };
+    return () => window.removeEventListener('message', receiveMessage);
   }, []);
 
+  const toggleChatBot = () => setExpanded(!expanded);
+  const closeChatBot = () => setExpanded(false);
 
-  const toggleChatBot = () => {
-    setExpanded(!expanded);
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      handleSendMessage();
+    }
   };
 
   return (
-    <div className={`chatbot chatbot-button ${expanded ? 'expanded' : ''}`} onClick={toggleChatBot}>
-      {/* 这里是你的图标和文字 */}
-      {!expanded && (
-        <div className="chatbot-icon">🤖</div> // 示例图标，请替换为实际图标
-      )}
-      {/* 聊天内容区域，展开后显示 */}
-      {expanded && (
-        <div className="chatbot-content">
-          {JSON.stringify(initData)}
-          <p>This is text send from integrated platform</p>
-          {JSON.stringify(text)}
+    <div className={`chatbot chatbot-button ${expanded ? 'expanded' : 'chatbot-button'}`}>
+      {expanded ? (
+        <div className="chatbot-header">
+          <button className="close-button" onClick={closeChatBot}>
+            &times;
+          </button>
+        </div>
+      ) : (
+        <div className="chatbot-icon" onClick={toggleChatBot}>
+          🤖
         </div>
       )}
-      {/* 按钮文本，展开后显示 */}
+
       {expanded && (
-        <div className="chatbot-label">Chat</div>
+        <div className="chatbot-content">
+          This is the init data : {JSON.stringify(initData)}
+          <div className="message-area">
+            {messages.map((msg, index) => (
+              <div key={index} className={`message ${msg.sender}`}>
+                {msg.text}
+              </div>
+            ))}
+          </div>
+          <div className="input-area">
+            <input
+              type="text"
+              value={input}
+              onChange={handleInputChange}
+              className="chatbot-input"
+              placeholder="Type your message..."
+              onKeyDown={handleKeyDown}
+            />
+            <button onClick={handleSendMessage} className="send-button">
+              Send
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

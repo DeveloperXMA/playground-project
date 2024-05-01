@@ -1,15 +1,14 @@
-// Variables for common values
-$chatbot-bg-collapsed: red;
-$chatbot-bg-width: 4rem;
-$chatbot-bg-height: 4rem;
-$chatbot-bg-expanded: #fff;
-$chatbot-shadow: rgba(0, 0, 0, 0.2); // Correct variable name
-$chatbot-collapsed-width: 50px; // Diameter of the button when collapsed
-$chatbot-expanded-width: 200px; // Width of the chatbot when expanded
-$chatbot-content-padding: 10px;
-$button-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Define button shadow variable
-// Define a font stack
+// chatbot.scss
+$chatbot-collapsed-bg: red;
+$chatbot-expanded-bg: #fff;
+$button-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+$chatbot-width-collapsed: 50px;
+$chatbot-width-expanded: 300px;
+$padding: 10px;
 $font-stack: 'Arial', sans-serif;
+
+$user-message-bg: #25D366;
+$bot-message-bg: #ECE5DD;
 
 // Mixin for flexbox centering
 @mixin flex-center {
@@ -18,49 +17,117 @@ $font-stack: 'Arial', sans-serif;
   justify-content: center;
 }
 
-// Styling for the collapsed chatbot button
+// ChatBot collapsed button
 .chatbot-button {
   @include flex-center;
   position: fixed;
-  bottom: 20px; // Positioned 20px from the bottom
-  right: 20px; // Positioned 20px from the right
-  width: $chatbot-bg-width; // Width of the button when collapsed
-  height: $chatbot-bg-height; // Height of the button to make it a circle
-  background-color: $chatbot-bg-collapsed;
-  border-radius: 50%; // Make it round
+  bottom: 20px;
+  right: 20px;
+  width: $chatbot-width-collapsed;
+  height: $chatbot-width-collapsed;
+  background-color: $chatbot-collapsed-bg;
+  border-radius: 50%;
   box-shadow: $button-shadow;
   cursor: pointer;
-  z-index: 9999; // High z-index to ensure it's on top of other content
+  z-index: 9999;
   border: none;
   outline: none;
-  transition: all 0.3s ease; // Smooth transition for properties
+  transition: all 0.3s ease;
 }
 
-// Styling for the icon inside the button
+// Icon inside the button
 .chatbot-icon {
-  font-size: 2rem; // Size of the icon
-  color: $chatbot-bg-expanded; // Icon color
+  font-size: 2rem;
+  color: $chatbot-expanded-bg;
 }
 
-// Styling for when the chatbot is expanded
+// ChatBot expanded
 .chatbot.expanded {
-  width: $chatbot-expanded-width; // Full width when expanded
-  background-color: $chatbot-bg-expanded; // Background color when expanded
-  box-shadow: $chatbot-shadow; // Shadow to provide depth
-  overflow-y: auto; // Allow scrolling for overflow content
-  height: 100vh; // Full viewport height
-  right: 0; // Stick to the right
-  top: 0; // Align to top
-  border-radius: 0; // No rounded corners when expanded
+  width: $chatbot-width-expanded;
+  background-color: $chatbot-expanded-bg;
+  box-shadow: $button-shadow;
+  overflow-y: auto;
+  height: 100vh;
+  right: 0;
+  top: 0;
+  border-radius: 0;
+  padding: $padding;
 }
 
-// Styling for the content inside the chatbot
+// ChatBot content
 .chatbot-content {
-  padding: $chatbot-content-padding; // Padding inside the content area
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  box-sizing: border-box;
 }
 
-// Reset the chatbot label to hide when collapsed
-.chatbot-label {
-  display: none; // Initially hidden
-  // Additional label styles go here
+.message-area {
+  display: flex;
+  flex-direction: column;
+  gap: $padding;
+}
+
+.message {
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin-bottom: 4px;
+  word-wrap: break-word;
+  max-width: fit-content;
+}
+
+.message.user {
+  align-self: flex-end;
+  background-color: $user-message-bg;
+}
+
+.message.bot {
+  align-self: flex-start;
+  background-color: $bot-message-bg;
+  color: black;
+}
+
+.input-area {
+  display: flex;
+  padding: $padding;
+  border-top: 1px solid #ccc;
+}
+
+.chatbot-input {
+  flex: 1;
+  padding: $padding;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: $padding;
+}
+
+.send-button {
+  padding: $padding;
+  background-color: #0b93f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0a81d1;
+  }
+}
+
+.chatbot-header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: flex-end;
+
+  .close-button {
+    font-size: 1.5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #666;
+  }
 }
