@@ -1,38 +1,15 @@
-// webpack.config.mjs
-import webpack from 'webpack';
-import path from 'path';
+// webpack.common.js
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { fileURLToPath } from 'url';
+import webpack from 'webpack';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export default (_, argv) => {
+export default (env, argv) => {
   const mode = argv.mode || 'development';
   const isProduction = mode === 'production';
-  console.log(isProduction)
+
   return {
     mode,
     entry: isProduction ? './src/entry.tsx' : './src/main.tsx',
-    output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename:  isProduction ? 'my-chatbot-widget.umd.js' : '[name].[contenthash].js',
-      publicPath: '/',
-      library: {
-        name: 'MyChatBotWidget',
-        type: 'umd',
-      },
-      globalObject: 'this',
-    },
-    devtool: isProduction ? 'source-map' : 'eval-source-map',
-    devServer: {
-      static: {
-        directory: path.resolve(__dirname, 'dist'),
-      },
-      hot: true,
-      historyApiFallback: true, // Ensures deep links work correctly
-    },
     module: {
       rules: [
         {
@@ -45,24 +22,12 @@ export default (_, argv) => {
           use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
         },
         {
-          test: /\.svg$/,
+          test: /\.(png|svg)$/,
           use: [
             {
               loader: 'file-loader',
               options: {
-                name: '[name].[ext]', // Preserve the original filename
-              },
-            },
-          ],
-        },
-        {
-          test: /\.png$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                mimetype: 'image/png',
-                name: '[name].[ext]', // Preserve the original filename
+                name: '[name].[ext]',
               },
             },
           ],
@@ -81,8 +46,9 @@ export default (_, argv) => {
       }),
     ],
     resolve: {
-      extensions: ['.tsx', '.ts', '.js', '.jsx'],
+      extensions: ['.tsx', '.ts', '.js'],
     },
+    devtool: isProduction ? 'source-map' : 'eval-source-map',
     optimization: {
       runtimeChunk: 'single',
       splitChunks: {
@@ -95,5 +61,5 @@ export default (_, argv) => {
         },
       },
     },
-  };
+  }
 };

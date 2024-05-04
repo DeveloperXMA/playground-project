@@ -6,6 +6,7 @@ import ChatBot from './ChatBot';
 const loadChatBot = (selector: string, initData: { [key: string]: string }) => {
   const container = document.querySelector(selector);
   if (container) {
+    console.log(`what is ${container}`)
     const root = createRoot(container); // Create a root.
     root.render(<ChatBot {...initData} />); // Use the root to render using spread operator to pass props.
   } else {

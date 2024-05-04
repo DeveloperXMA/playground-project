@@ -8,6 +8,13 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module">
+      if (typeof import.meta.env !== 'undefined' && import.meta.env.MODE === 'development') {
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = './src/main.tsx';
+        document.body.appendChild(script);
+      }
+    </script>
   </body>
 </html>
