@@ -8,14 +8,13 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 export default (env, argv) => {
   const mode = argv.mode || 'development';
   const isProduction = mode === 'production';
-
+  console.log('hello', mode)
   return {
     mode,
-    entry: isProduction ? './src/entry.tsx' : './src/main.tsx',
+    entry: isProduction ? path.join(__dirname, '.src/entry.tsx') : path.join(__dirname, './src/main.tsx'),
     module: {
       rules: [
         {
@@ -42,7 +41,7 @@ export default (env, argv) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './index.html',
+        template: path.join(__dirname, 'index.html'),
       }),
       new MiniCssExtractPlugin({
         filename: 'style.css',
@@ -52,12 +51,12 @@ export default (env, argv) => {
       }),
     ],
     resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
+      extensions: ['.tsx', '.ts', '.js', 'jsx'],
     },
     devtool: isProduction ? 'source-map' : 'eval-source-map',
     devServer: {
       static: {
-        directory: path.resolve(__dirname, 'dist'),
+        directory: path.join(__dirname, 'public'),
       },
       hot: true,
       historyApiFallback: true, // Ensures deep links work correctly

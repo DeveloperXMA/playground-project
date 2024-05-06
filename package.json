@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "clean": "rm -rf node_modules && rm package-lock.json",
+    "clean:build": "rm -rf dist",
     "dev:vite": "vite",
     "build:vite": "tsc && vite build",
     "dev:webpack": "NODE_ENV=development webpack serve --config webpack.common.js --progress",
-    "build:webpack": "NODE_ENV=production webpack --config webpack.config.js",
     "build:webpack:es": "NODE_ENV=production webpack --config webpack.es.js",
     "build:webpack:umd": "NODE_ENV=production webpack --config webpack.umd.js",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
