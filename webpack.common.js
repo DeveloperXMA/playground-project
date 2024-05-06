@@ -2,6 +2,12 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import webpack from 'webpack';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 export default (env, argv) => {
   const mode = argv.mode || 'development';
@@ -49,6 +55,13 @@ export default (env, argv) => {
       extensions: ['.tsx', '.ts', '.js'],
     },
     devtool: isProduction ? 'source-map' : 'eval-source-map',
+    devServer: {
+      static: {
+        directory: path.resolve(__dirname, 'dist'),
+      },
+      hot: true,
+      historyApiFallback: true, // Ensures deep links work correctly
+    },
     optimization: {
       runtimeChunk: 'single',
       splitChunks: {
