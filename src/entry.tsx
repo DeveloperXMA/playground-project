@@ -1,7 +1,6 @@
-// src/index.tsx
+// src/entry.tsx
 import { createRoot } from 'react-dom/client';
 import ChatBot from './ChatBot';
-
 
 const loadChatBot = (selector: string, initData: { [key: string]: string }) => {
   const container = document.querySelector(selector);

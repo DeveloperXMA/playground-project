@@ -11,12 +11,12 @@ export default merge(commonConfig, {
   
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'my-chatbot-widget.es.js',
+    filename: 'my-chatbot-widget-webpack.es.js',
     library: {
       type: 'module',
     },
   },
   experiments: {
     outputModule: true,
-  },
+  },  
 });
